@@ -24,16 +24,10 @@ public class ContactsMain {
 //        System.out.println(contactText);
         contacts = Contact.stringsToContacts(contactText);
 
-        listContacts(contacts); //TODO:comment out when not used for testing
+//        listContacts(contacts); //TODO:comment out when not used for testing
+        
 
-        System.out.println("1. View contacts.\n" +
-                "2. Add a new contact.\n" +
-                "3. Search a contact by name.\n" +
-                "4. Delete an existing contact.\n" +
-                "5. Exit.\n" +
-                "Enter an option (1, 2, 3, 4 or 5):");
-
-        //TODO: create some sort of switch case for the user options
+        //TODO: create some sort of switch case for the user options - still WIP
 
 //        String option = sc.nextLine();
 //        switch(option) {
@@ -42,6 +36,37 @@ public class ContactsMain {
 //            case 2: addContact();
 //            default: break;
 //        }
+        int userChoice;
+    
+        do {
+            userChoice = userResponse();
+            switch (userChoice) {
+                case 1:
+                    listContacts(contacts);
+                    break;
+                case 2:
+                    addContact(contactPath);
+                    break;
+            }
+        } while (userChoice != 5);
+    }
+    
+    //TODO: not printing the options list for some reason - need to figure out why
+    
+    // grab user response for switch-case
+    public static int userResponse() {
+        Scanner sc = new Scanner(System.in);
+        
+        int option = sc.nextInt();
+    
+        System.out.println("1. View contacts.\n" +
+                           "2. Add a new contact.\n" +
+                           "3. Search a contact by name.\n" +
+                           "4. Delete an existing contact.\n" +
+                           "5. Exit.\n" +
+                           "Enter an option (1, 2, 3, 4 or 5):");
+        
+        return option;
     }
 
     public static void listContacts(List<Contact> contacts) {
