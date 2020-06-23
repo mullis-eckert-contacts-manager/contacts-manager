@@ -12,30 +12,14 @@ public class ContactsMain {
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
         Path contactPath = Paths.get("src","contacts.txt");
-
-        List<Contact> contacts;
+        
         List<String> contactText = Arrays.asList(
-                "Jack Blank:1231231234",
-                "Jane Doe:2342342345",
-                "Sam Space:3453453456");
+                "Jack Blank | 1231231234",
+                "Jane Doe | 2342342345",
+                "Sam Space | 3453453456");
 
         Files.write(contactPath, contactText);
-
-//        System.out.println(contactText);
-        contacts = Contact.stringsToContacts(contactText);
-
-//        listContacts(contacts); //TODO:comment out when not used for testing
         
-
-        //TODO: create some sort of switch case for the user options - still WIP
-
-//        String option = sc.nextLine();
-//        switch(option) {
-//            case 1: listContacts(contacts);
-//            break;
-//            case 2: addContact();
-//            default: break;
-//        }
         int userChoice;
         boolean continueLoop = true;
     
@@ -43,14 +27,16 @@ public class ContactsMain {
             userChoice = userResponse();
             switch (userChoice) {
                 case 1:
-                    listContacts(contacts);
+                    listContacts();
                     break;
                 case 2:
-                    addContact(contactPath);
-                    contacts = Contact.stringsToContacts(contactText);
-                    System.out.println(contacts);
+                    addContact();
                     break;
-                case 5: continueLoop = false;
+                case 4:
+                    deleteContact();
+                    break;
+                case 5:
+                    continueLoop = false;
             }
         } while(continueLoop);
     }
@@ -71,21 +57,62 @@ public class ContactsMain {
         return sc.nextInt();
     }
 
-    public static void listContacts(List<Contact> contacts) {
-        for (Contact contact : contacts) {
-            System.out.println(contact.getName() + " | " + contact.getNumber());
+    // list all contacts
+    public static void listContacts() {
+        Path contactPath = Paths.get("src","contacts.txt");
+        try {
+            System.out.println("Name | Phone number\n"
+                               + "---------------");
+            List<String> listAllContacts = Files.readAllLines(contactPath);
+            for (String contact : listAllContacts) {
+                System.out.println(contact);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-
-    //TODO: properly write and test addContact method.
-
-    public static void addContact(Path contactPath) throws IOException{
+    // add a new contact
+    public static void addContact(){
+        Path contactPath = Paths.get("src","contacts.txt");
+        
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter the name:");
         String name = sc.nextLine();
         System.out.println("Please enter the number:");
         String number = sc.nextLine();
-        Files.write(contactPath, Arrays.asList(name + ":" + number), StandardOpenOption.APPEND);
+        
+        String concatContact = name + " | " + number;
+        
+        try {
+            Files.write(contactPath, Arrays.asList(concatContact), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // deletes a contact from a numbered list
+    public static void deleteContact() {
+        Path contactPath = Paths.get("src","contacts.txt");
+    
+        try {
+            List<String> listAllContacts = Files.readAllLines(contactPath);
+            for (int i = 0; i < listAllContacts.size(); i++) {
+                System.out.println((i + 1) + " - " + listAllContacts.get(i));
+            }
+    
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Which contact would you like to delete?");
+            int contactToDelete = sc.nextInt();
+            listAllContacts.remove(contactToDelete - 1);
+    
+            System.out.println("Contact removed.");
+            
+            Files.write(contactPath, listAllContacts);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    
     }
 }
