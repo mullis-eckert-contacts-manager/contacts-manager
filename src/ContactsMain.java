@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class ContactsMain {
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
-        Path contactPath = Paths.get("contacts.txt");
+        Path contactPath = Paths.get("src","contacts.txt");
 
         List<Contact> contacts;
         List<String> contactText = Arrays.asList(
@@ -19,7 +19,7 @@ public class ContactsMain {
                 "Jane Doe:2342342345",
                 "Sam Space:3453453456");
 
-        Files.write(contactPath, contactText, StandardOpenOption.APPEND);
+        Files.write(contactPath, contactText);
 
 //        System.out.println(contactText);
         contacts = Contact.stringsToContacts(contactText);
@@ -37,6 +37,7 @@ public class ContactsMain {
 //            default: break;
 //        }
         int userChoice;
+        boolean continueLoop = true;
     
         do {
             userChoice = userResponse();
@@ -46,9 +47,12 @@ public class ContactsMain {
                     break;
                 case 2:
                     addContact(contactPath);
+                    contacts = Contact.stringsToContacts(contactText);
+                    System.out.println(contacts);
                     break;
+                case 5: continueLoop = false;
             }
-        } while (userChoice != 5);
+        } while(continueLoop);
     }
     
     //TODO: not printing the options list for some reason - need to figure out why
@@ -56,17 +60,15 @@ public class ContactsMain {
     // grab user response for switch-case
     public static int userResponse() {
         Scanner sc = new Scanner(System.in);
-        
-        int option = sc.nextInt();
-    
+
         System.out.println("1. View contacts.\n" +
-                           "2. Add a new contact.\n" +
-                           "3. Search a contact by name.\n" +
-                           "4. Delete an existing contact.\n" +
-                           "5. Exit.\n" +
-                           "Enter an option (1, 2, 3, 4 or 5):");
-        
-        return option;
+                "2. Add a new contact.\n" +
+                "3. Search a contact by name.\n" +
+                "4. Delete an existing contact.\n" +
+                "5. Exit.\n" +
+                "Enter an option (1, 2, 3, 4 or 5):");
+
+        return sc.nextInt();
     }
 
     public static void listContacts(List<Contact> contacts) {
