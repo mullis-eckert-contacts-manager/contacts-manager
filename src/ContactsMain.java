@@ -14,9 +14,9 @@ public class ContactsMain {
         Path contactPath = Paths.get("src","contacts.txt");
         
         List<String> contactText = Arrays.asList(
-                "Jack Blank | 1231231234",
-                "Jane Doe | 2342342345",
-                "Sam Space | 3453453456");
+                "Jack Blank : 1231231234",
+                "Jane Doe : 2342342345",
+                "Sam Space : 3453453456");
 
         Files.write(contactPath, contactText);
         
@@ -31,6 +31,9 @@ public class ContactsMain {
                     break;
                 case 2:
                     addContact();
+                    break;
+                case 3:
+                    searchContacts();
                     break;
                 case 4:
                     deleteContact();
@@ -82,7 +85,7 @@ public class ContactsMain {
         System.out.println("Please enter the number:");
         String number = sc.nextLine();
         
-        String concatContact = name + " | " + number;
+        String concatContact = name + " : " + number;
         
         try {
             Files.write(contactPath, Arrays.asList(concatContact), StandardOpenOption.APPEND);
@@ -114,5 +117,23 @@ public class ContactsMain {
             e.printStackTrace();
         }
     
+    }
+
+    public static void searchContacts() {
+        Path contactPath = Paths.get("src","contacts.txt");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter name of contact:");
+        String searchTerm = sc.nextLine();
+        try {
+            System.out.println("Name | Phone number\n"
+                    + "---------------");
+            List<String> listAllContacts = Files.readAllLines(contactPath);
+            for (String contact : listAllContacts) {
+                if(contact.split(":")[0].trim().toUpperCase().contains(searchTerm.toUpperCase()))
+                System.out.println(contact);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
